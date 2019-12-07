@@ -3,6 +3,8 @@ import React, { useEffect, useState } from 'react';
 
 import Pagination from "../components/Pagination";
 import CustomersAPI from "../services/customersAPI";
+import { Link } from "react-router-dom";
+
 
 
 
@@ -63,7 +65,11 @@ const paginatedCustomers = Pagination.getData(filteredCustomers, currentPage, it
 
 	return (
 		<>
-		<h1>Liste des clients</h1>
+		<div className="mb-2 d-flex justify-content-between align-item-center">
+			<h1>Liste des clients</h1>
+			<Link to="/customers/new" className="btn btn-primary">Créer un client</Link>
+		</div>
+		
 		<div className="form-groups">
 		<input className="form-control" type="text" onChange={handleSearch} value={search} placeholder="Rechercher..."/>
 		</div>
@@ -84,7 +90,7 @@ const paginatedCustomers = Pagination.getData(filteredCustomers, currentPage, it
 
 	                <td>{customer.id}</td>
 	                <td>
-	                 <a href="#">{customer.firstName} {customer.lastName}</a>
+	                 <Link to={"/customers/" + customer.id}>{customer.firstName} {customer.lastName}</Link>
 	                </td>
 	                <td>{customer.email}</td>
 	                <td>{customer.company}</td>

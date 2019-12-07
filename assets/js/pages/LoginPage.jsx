@@ -3,6 +3,7 @@ import axios from "axios";
 import CustomersAPI from "../services/customersAPI"; 
 import AuthAPI from '../services/authAPI';
 import AuthContext from '../contexts/AuthContext';
+import Field from '../components/forms/Field';
 const LoginPage = ({ history }) => {
 const { setIsAthenticated } = useContext(AuthContext);
     const [credentials, setCredentials] = useState({
@@ -31,22 +32,9 @@ const { setIsAthenticated } = useContext(AuthContext);
     return ( <>
     <h1>Connexion a l'application</h1>
     <form onSubmit={handleSubmit}>
-        <div className="form-group">
-            <label id="username" htmlFor="username">Adresse email</label>
-            <input 
-                value={credentials.username} 
-                onChange = { handleChange } 
-                type="email" 
-                className={"form-control" + (error && " is-invalid")}
-                name="username"
-            />
-        </div>
-        {error && <p className="invalid-feedback">{error}</p>}
-        
-        <div className="form-group">
-            <label id="password" htmlFor="password">Passe word</label>
-            <input value={credentials.password} onChange={handleChange} name="password" type="password" className="form-control"/>
-        </div>
+        <Field label ="Adresse email" name="username" value ={credentials.username}  onChange = { handleChange } placeholder="votre adresse mail" error={error} />
+        <Field label ="Mot de passe" name="password" type="password" value ={credentials.password}  onChange = { handleChange } placeholder="votre mot de passe" error="" />
+    
         <div className="form-group">
             <button type="submit" className="btn btn-success">Je me connecte</button>
         </div>
