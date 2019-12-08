@@ -4,6 +4,7 @@ import CustomersAPI from "../services/customersAPI";
 import AuthAPI from '../services/authAPI';
 import AuthContext from '../contexts/AuthContext';
 import Field from '../components/forms/Field';
+import { toast } from 'react-toastify';
 const LoginPage = ({ history }) => {
 const { setIsAthenticated } = useContext(AuthContext);
     const [credentials, setCredentials] = useState({
@@ -22,11 +23,12 @@ const { setIsAthenticated } = useContext(AuthContext);
         await AuthAPI.authenticate(credentials);
         setError("");
         setIsAthenticated(true);
+        toast.success("vous etes connecté");
         history.replace("/customers");
 
         } catch(error){
             setError("auccun compte trouvé");
-            console.log('test')
+            toast.error("une erreur est survenue")
         }
     };
     return ( <>

@@ -3,6 +3,8 @@ import Field from '../components/forms/Field';
 import { Link } from "react-router-dom";
 import axios from "axios";
 import customersAPI from "../services/customersAPI";
+import { toast } from 'react-toastify';
+import FormContentLoader from '../components/loaders/FormContentLoader';
 
 const CustomerPage = ({match, history}) => {
 
@@ -23,18 +25,21 @@ const CustomerPage = ({match, history}) => {
   });
 
   const [editing, setEditing] = useState(false);
+  const[loading, setLoading] = useState(false);
   const fetchCustomer = async id =>{
     try{
       const { firstName, lastName, email, company } = await customersAPI.find(id);
-      setCustomer({ firstName, lastName, email, company })
+      setCustomer({ firstName, lastName, email, company });
+      setLoading(false);
     }catch(error){
-      console.log(error.response);
+      toast.error("le client n'a pas pu chargé");
+      history.replace("/customers");
     }
   };
   
   useEffect(() => {
     if (id !== "new") {
-      //setLoading(true);
+      setLoading(true);
       setEditing(true);
       fetchCustomer(id);
       
@@ -48,11 +53,14 @@ const CustomerPage = ({match, history}) => {
   const handleSubmit = async event=>{
     event.preventDefault();
     try{
+      setErrors({});
       if(editing){
-        const response = await customersAPI.update(id, customer);
+        await customersAPI.update(id, customer);
+        toast.success("le client est modifié");
         
       } else{
         customersAPI.create(customer);
+        toast.success("le client est crée");
         history.replace("/customers");
       }
         
@@ -67,6 +75,7 @@ const CustomerPage = ({match, history}) => {
           });
           setErrors(apiErrors);
         }
+        toast.error("des erreur dans le formulaires");
     }
   };
 
@@ -74,7 +83,8 @@ const CustomerPage = ({match, history}) => {
           {(!editing && <h1>Création d'un client</h1>) || (
         <h1>Modification du client</h1>
       )}
-        <form onSubmit={handleSubmit}>
+        {loading && <FormContentLoader/>}
+        {!loading && <form onSubmit={handleSubmit}>
             <Field
             name="lastName"
             label="Nom de famille"
@@ -117,7 +127,7 @@ const CustomerPage = ({match, history}) => {
               Retour à la liste
             </Link>
           </div>
-        </form>
+        </form> }
     </> );
 }
  

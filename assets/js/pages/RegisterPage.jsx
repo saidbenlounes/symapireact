@@ -2,9 +2,11 @@ import React,{useState} from 'react';
 import Field from '../components/forms/Field';
 import { Link } from "react-router-dom";
 import UserAPI from "../services/userAPI";
+import { toast } from 'react-toastify';
 
 const RegisterPage = ({history}) => {
     // les données de formulaire
+    // avec le onChange que on change les valeur de ce state
     const [user, setUser] = useState({
         firstName: "",
         lastName: "",
@@ -22,6 +24,7 @@ const RegisterPage = ({history}) => {
     }); 
 
       // Gestion des changements des inputs dans le formulaire
+      // on recupere les NAME on le match avec le state et on lui insere sa VALUE
     const handleChange = ({ currentTarget }) => {
         const { name, value } = currentTarget;
         setUser({ ...user, [name]: value });
@@ -34,6 +37,7 @@ const RegisterPage = ({history}) => {
         if(user.password !== user.passwordConfirm){
             apiErrors.passwordConfirm="votre mot de passe de confirmation est different de l'orginal"
             setErrors(apiErrors);
+            toast.error("vous avez des erruers dans votre formulaire");
             return;
         }
 
@@ -41,8 +45,7 @@ const RegisterPage = ({history}) => {
             await UserAPI.register(user);
             setErrors({});
             history.replace('/login');
-            
-
+            toast.success("Vous etes désomais inscrit")
         } catch(error){
             console.log(error.response);
             // recuprer violations de error.response.data
@@ -56,6 +59,7 @@ const RegisterPage = ({history}) => {
               });
               setErrors(apiErrors);
             }
+            toast.error("vous avez des erruers dans votre formulaire");
         }
         
     };
